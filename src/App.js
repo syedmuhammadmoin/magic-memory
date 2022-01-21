@@ -36,15 +36,20 @@ function App() {
 
   useEffect(() => {
     if (choiceOne && choiceTwo) {
-      setCards((prevCards) => {
-        return prevCards.map((card) => {
-          if (card.src === choiceOne.src) {
-            return { ...card, matched: true };
-          } else {
-            return card;
-          }
+      if (choiceOne.src === choiceTwo.src) {
+        setCards((prevCards) => {
+          return prevCards.map((card) => {
+            if (card.src === choiceOne.src) {
+              return { ...card, matched: true };
+            } else {
+              return card;
+            }
+          });
         });
-      });
+        resetTurn();
+      } else {
+        setTimeout(() => resetTurn(), 1000);
+      }
     }
   }, [choiceOne, choiceTwo]);
 
@@ -65,7 +70,14 @@ function App() {
 
       <div className='card-grid'>
         {cards.map((card) => (
-          <SingleCard key={card.id} card={card} handleChoice={handleChoice} />
+          <SingleCard
+            key={card.id}
+            card={card}
+            handleChoice={handleChoice}
+            flipped={
+              card === choiceOne || card.src === choiceTwo || card.matched
+            }
+          />
         ))}
       </div>
     </div>
